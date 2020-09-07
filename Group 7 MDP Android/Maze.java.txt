@@ -1,0 +1,187 @@
+package com.example.android.MDP;
+
+/**
+ * Created by Sean on 2/14/2017.
+ */
+
+import android.content.Context;
+import android.graphics.Canvas;
+import android.view.View;
+import android.widget.RelativeLayout;
+
+import java.util.ArrayList;
+
+public class Maze extends View {
+    private int gridSize;
+    private int numCol = 20;
+
+    private MazeMap map;
+    private int[] gridArray;
+    private MazeThread thread;
+    private ArrayList obstacleArray,exploredArray;
+
+    // Constructor
+    public Maze(Context context, int[] array) {
+        super(context);
+        map = new MazeMap(array, new Rectangle());
+        thread = new MazeThread(this);
+        thread.startThread();
+    }
+
+    @Override
+    public void onDraw(Canvas canvas) {
+        RelativeLayout mapView = (RelativeLayout) getRootView().findViewById(R.id.maze_map);
+        gridSize = ((mapView.getMeasuredWidth()) - (mapView.getMeasuredWidth() / numCol)) / numCol;
+        map.drawMapString(canvas, gridSize);
+    }
+
+    public void setGridArray(int[] gridArray) {
+        this.gridArray = gridArray;
+    }
+
+    public void setObstacleArray(ArrayList obstacleArray) {
+        this.obstacleArray = obstacleArray;
+
+    }
+    public void setExploredArray(ArrayList exploredArray) {
+        this.exploredArray = exploredArray;
+
+    }
+
+
+    public void updateMap() {
+        map.setGridArray(gridArray);
+        map.setObstacleArray(obstacleArray);
+        map.setExploredArray(exploredArray);
+
+    }
+
+    public void turnRight() {
+        gridArray[4] = (gridArray[4] + 1) % 4;
+        System.out.println(gridArray[4]);
+    }
+
+
+    public void turnLeft() {
+        gridArray[4] = (gridArray[4] - 1) % 4;
+        if (gridArray[4] < 0) gridArray[4] = 3;
+    }
+
+    public void moveForward() {
+
+        if (gridArray[4] == 0) {
+        gridArray[2] = gridArray[2];
+        gridArray[3] = gridArray[3] - 1;
+    } else if (gridArray[4] == 1) {
+        gridArray[2] = gridArray[2] + 1;
+        gridArray[3] = gridArray[3];
+    } else if (gridArray[4] == 2) {
+        gridArray[2] = gridArray[2];
+        gridArray[3] = gridArray[3] + 1;
+    } else if (gridArray[4] == 3) {
+        gridArray[2] = gridArray[2] - 1;
+        gridArray[3] = gridArray[3];
+    }
+}
+public void Reverse()
+{
+    if (gridArray[4] == 0) {
+        gridArray[2] = gridArray[2];
+        gridArray[3] = gridArray[3] + 1;
+    } else if (gridArray[4] == 1) {
+        gridArray[2] = gridArray[2] - 1;
+        gridArray[3] = gridArray[3];
+    } else if (gridArray[4] == 2) {
+        gridArray[2] = gridArray[2];
+        gridArray[3] = gridArray[3] - 1;
+    } else if (gridArray[4] == 3) {
+        gridArray[2] = gridArray[2] + 1;
+        gridArray[3] = gridArray[3];
+    }
+
+}
+    public void startPosition(int column, int row, int direction) {
+        gridArray[4] = direction;
+        gridArray[2] = column;
+        gridArray[3] = row;
+        map.setGridArray(gridArray);
+
+    }
+
+    public boolean checkMove(int check) {
+        int column = gridArray[2];
+        int row = gridArray[3];
+        int direction = gridArray[4];
+        boolean obstacleBlock = checkObstacleBlock(column, row, direction);
+        if (column == -1 || row == -1) return false;
+
+        if (check == 0) {
+            if (direction == 0) {
+                if (row == 0 || obstacleBlock) {
+                    return false;
+                }
+            } else if (direction == 1) {
+                if (column == 12 || obstacleBlock) {
+                    return false;
+                }
+            } else if (direction == 2) {
+                if (row == 17 || obstacleBlock) {
+                    return false;
+                }
+            } else {
+                if (column == 0 || obstacleBlock) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    public boolean checkObstacleBlock(int row, int col, int direction) {
+        int x, y, obstacleRow, obstacleCol;
+        for (int i = 0; i < obstacleArray.size(); i++) {
+            double keyValue = Math.ceil(((int) obstacleArray.get(i)) / 15);
+            y = (int) (keyValue);
+            x = (int) ((int) (obstacleArray.get(i)) - (keyValue * 15));
+
+            if (x == 0) {
+                obstacleRow = 15;
+                obstacleCol = y;
+
+            } else {
+                obstacleRow = x - 1;
+                obstacleCol = y;
+            }
+            if (direction == 0) {
+                if ((row == obstacleRow && col - 1 == obstacleCol) || (row + 1 == obstacleRow && col - 1 == obstacleCol) || (row + 2 == obstacleRow && col - 1 == obstacleCol)) {
+                    return true;
+                }
+            } else if (direction == 1) {
+                if ((row + 3 == obstacleRow && col == obstacleCol) || (row + 3 == obstacleRow && col + 1 == obstacleCol) || (row + 3 == obstacleRow && col + 2 == obstacleCol)) {
+                    return true;
+                }
+            } else if (direction == 2) {
+                if ((row == obstacleRow && col + 3 == obstacleCol) || (row + 1 == obstacleRow && col + 3 == obstacleCol) || (row + 2 == obstacleRow && col + 3 == obstacleCol)) {
+                    return true;
+                }
+            } else {
+                if ((row - 1 == obstacleRow && col == obstacleCol) || (row - 1 == obstacleRow && col + 1 == obstacleCol) || (row - 1 == obstacleRow && col + 2 == obstacleCol)) {
+                    return true;
+                }
+
+            }
+
+        }
+
+        return false;
+    }
+
+    public void stopThread() {
+        thread.stopThread();
+    }
+
+    public void startThread() {
+        thread.startThread();
+    }
+}

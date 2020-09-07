@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+                android:id = "@+id/maze_map"
+    android:weightSum="1"
+    android:baselineAligned="false"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
+
+
+    <Button
+        android:id="@+id/button_send"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="up"
+        android:layout_above="@+id/button11"
+        android:layout_alignLeft="@+id/button9"
+        android:layout_alignStart="@+id/button9" />
+
+    <Button
+        android:text="RIGHT"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:dividerHeight="14.5sp"
+        android:id="@+id/button11"
+        android:layout_above="@+id/button9"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:text="DOWN"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/button9"
+        android:layout_weight="0.01"
+        android:layout_marginRight="41dp"
+        android:layout_marginEnd="41dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:text="LEFT"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/button10"
+        android:layout_above="@+id/button9"
+        android:layout_toLeftOf="@+id/button11"
+        android:layout_toStartOf="@+id/button11" />
+
+    <ToggleButton
+
+        android:textOff="Manual"
+        android:textOn="Auto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/toggleButton"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <ListView android:id="@+id/in"
+        android:layout_width="match_parent"
+        android:layout_height="301dp"
+        android:stackFromBottom="true"
+        android:dividerHeight="10.5sp"
+        android:transcriptMode="alwaysScroll"
+        android:layout_weight="0.24"
+        android:divider="#00000000"
+        android:layout_alignTop="@+id/button_send"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <ToggleButton
+        android:textOff="Set Robot pos"
+        android:textOn="Enter"
+        android:text="ToggleButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toggleButton"
+        android:layout_alignLeft="@+id/toggleButton"
+        android:layout_alignStart="@+id/toggleButton"
+        android:layout_marginTop="14dp"
+        android:id="@+id/toggleButton2" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:layout_below="@+id/toggleButton2"
+        android:id="@+id/editText"
+        android:layout_alignLeft="@+id/toggleButton2"
+        android:layout_alignStart="@+id/toggleButton2"
+        android:layout_alignRight="@+id/button_send"
+        android:layout_alignEnd="@+id/button_send"
+        android:visibility="gone"
+        android:hint="X:" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:layout_alignBottom="@+id/editText"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/editText2"
+        android:layout_toRightOf="@+id/editText"
+        android:layout_toEndOf="@+id/editText"
+        android:visibility="gone"
+       android:hint="Y:" />
+
+    <Button
+        android:text="BT Cmd 1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btcmdbtn"
+        android:layout_below="@+id/toggleButton2"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="56dp" />
+
+    <Button
+        android:text="BT CMD 2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btcmdbtn"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/btcmdbtn2" />
+
+    <Button
+        android:text="BeginExplore"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/button"
+        android:layout_above="@+id/button_send"
+        android:layout_toLeftOf="@+id/btcmdbtn2" />
+
+    <Button
+        android:text="Fastest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/button"
+        android:layout_toRightOf="@+id/button"
+        android:layout_toEndOf="@+id/button"
+        android:id="@+id/button2" />
+
+
+</RelativeLayout>

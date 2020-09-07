@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Group_7_MDP_Android.iml" filepath="$PROJECT_DIR$/.idea/modules/Group_7_MDP_Android.iml" group="Group_7_MDP_Android" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" group="Group 7 MDP Android/app" />
+    </modules>
+  </component>
+</project>

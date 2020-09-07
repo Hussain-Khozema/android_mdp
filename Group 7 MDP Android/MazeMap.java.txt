@@ -1,0 +1,167 @@
+package com.example.android.MDP;
+
+/**
+ * Created by Sean on 2/14/2017.
+ */
+
+import android.graphics.Canvas;
+import android.graphics.Color;
+
+import java.util.ArrayList;
+
+public class MazeMap {
+//direction of robot head 0=up, 1=left, 2=down, else is right
+    private static final int COLOR_CELL_BACKGROUND = Color.rgb(135, 206, 250);
+    private static final int COLOR_START = Color.RED;
+    private static final int COLOR_EXPLORED = Color.YELLOW;
+    private static final int COLOR_GOAL = Color.rgb(153, 0, 204);//purple
+    private static final int COLOR_OBSTACLE = Color.BLACK;
+    private static final int ROBOT_FRONT_COLOR = Color.rgb(5, 147, 39); // head of the robot
+    private static final int ROBOT_REAR_COLOR = Color.rgb(171, 186, 13); // robot color
+    private static final int ROBOT_EYE = Color.rgb(221, 6, 6); // robot eye color
+
+    private int[] gridArray;
+    public Rectangle cell;
+    private Canvas tempCanvas;
+    private ArrayList obstacleArray;
+    private ArrayList exploredArray;
+
+    public MazeMap(int[] gridArray, Rectangle cell) {
+        this.gridArray = gridArray;
+        this.cell = cell;
+    }
+
+    public void drawMapString(Canvas canvas, int gridSize) {
+        this.tempCanvas = canvas;
+
+        int height = gridArray[0];
+        int width = gridArray[1];
+        int headX = gridArray[2] + 1;
+        int headY = gridArray[3] + 1;
+        int direction = gridArray[4];
+
+
+        // Draw Cell Background
+        for (int i = 1; i <= width; i++) {
+            for (int j = 1; j <= height; j++) {
+                cell.drawCell(canvas, i, j, COLOR_CELL_BACKGROUND, gridSize);
+            }
+        }
+
+        // Draw Start Point x=0,y=17
+        for (int i = 1; i <= 3; i++) {
+            for (int j = 1; j <= 3; j++) {
+                cell.drawCell(canvas, 0 + i, 17 + j, COLOR_START, gridSize);
+            }
+        }
+        // Draw End Point x=12 y=0
+        for (int i = 1; i <= 3; i++) {
+            for (int j = 1; j <= 3; j++) {
+                cell.drawCell(canvas, 12 + i, 0 + j, COLOR_GOAL, gridSize);
+            }
+        }
+        //DRAW EXPLORED PATH
+        for (int i = 0; i < exploredArray.size(); i++) {
+
+            double Value = Math.ceil(((int) exploredArray.get(i)) / 15);
+            int y = (int) (Value);
+            int x = (int) ((int) (exploredArray.get(i)) - (Value * 15));
+            if (x == 0) {
+                cell.drawCell(canvas, 15, y, COLOR_EXPLORED, gridSize);
+            } else {
+                cell.drawCell(canvas, x, y + 1, COLOR_EXPLORED, gridSize);
+            }
+        }
+
+        if (gridArray[2] > -1) {
+            if (direction == 0) { // Up
+                // Draw the robot head
+                for (int i = 0; i < 3; i++) {
+                    cell.drawCell(canvas, headX + i, headY, ROBOT_FRONT_COLOR, gridSize);
+
+                    // Draw the robot body
+                    for (int j = 0; j < 2; j++) {
+                        cell.drawCell(canvas, headX + i, headY + 1 + j, ROBOT_REAR_COLOR, gridSize);
+                    }
+                }
+                // Draw the robot eye
+                cell.drawCell(canvas, headX + 1, headY, ROBOT_EYE, gridSize);
+
+            } else if (direction == 2) { // Down
+                for (int i = 0; i < 3; i++) {
+                    // Draw the robot head
+                    cell.drawCell(canvas, headX + i, headY + 2, ROBOT_FRONT_COLOR, gridSize);
+
+                    // Draw the robot body
+                    for (int j = 0; j < 2; j++) {
+                        cell.drawCell(canvas, headX + i, headY + j, ROBOT_REAR_COLOR, gridSize);
+
+                    }
+                }
+                // Draw the robot eye
+                cell.drawCell(canvas, headX + 1, headY + 2, ROBOT_EYE, gridSize);
+
+            } else if (direction == 1) { // Left
+                for (int i = 0; i < 3; i++) {
+                    // Draw the robot head
+                    cell.drawCell(canvas, headX + 2, headY + i, ROBOT_FRONT_COLOR, gridSize);
+
+                    // Draw the robot body
+                    for (int j = 0; j < 2; j++) {
+                        cell.drawCell(canvas, headX + j, headY + i, ROBOT_REAR_COLOR, gridSize);
+                    }
+                }
+                // Draw the robot eye
+                cell.drawCell(canvas, headX + 2, headY + 1, ROBOT_EYE, gridSize);
+            } else // Right
+            {
+                for (int i = 0; i < 3; i++) {
+                    // Draw the robot head
+                    cell.drawCell(canvas, headX, headY + i, ROBOT_FRONT_COLOR, gridSize);
+
+                    // Draw the robot body
+                    for (int j = 0; j < 2; j++) {
+                        cell.drawCell(canvas, headX + 1 + j, headY + i, ROBOT_REAR_COLOR, gridSize);
+                    }
+                }
+                // Draw the robot eye
+                cell.drawCell(canvas, headX, headY + 1, ROBOT_EYE, gridSize);
+            }
+
+
+            // Draw Obstacles
+
+            for (int i = 0; i < obstacleArray.size(); i++) {
+
+                double keyValue = Math.ceil(((int) obstacleArray.get(i)) / 15);
+                int obstacleY = (int) (keyValue);
+                int obstacleX = (int) ((int) (obstacleArray.get(i)) - (keyValue * 15));
+                if (obstacleX == 0) {
+                    cell.drawCell(canvas, 15, obstacleY, COLOR_OBSTACLE, gridSize);
+                } else {
+                    cell.drawCell(canvas, obstacleX, obstacleY + 1, COLOR_OBSTACLE, gridSize);
+                }
+
+            }
+
+            }
+
+        }
+
+
+    public void setGridArray(int[] gridArray) {
+        this.gridArray = gridArray;
+    }
+
+    public void setObstacleArray(ArrayList obstacleArray) {
+        this.obstacleArray = obstacleArray;
+        android.util.Log.d("WTF2", String.valueOf(obstacleArray.size()));
+    }
+    public void setExploredArray(ArrayList exploredArray) {
+        this.exploredArray = exploredArray;
+       // android.util.Log.d("WTF20", String.valueOf(exploredArray.size()));
+    }
+
+
+
+}

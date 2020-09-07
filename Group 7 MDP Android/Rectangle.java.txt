@@ -1,0 +1,35 @@
+package com.example.android.MDP;
+
+/**
+ * Created by Sean on 2/14/2017.
+ */
+
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.RectF;
+
+public class Rectangle {
+    private int SIZE = 20;
+    private static final int CORNER = 5;
+
+    private int x;
+    private int y;
+    private Paint paint = null;
+
+    public Rectangle() {
+        super();
+        paint = new Paint();
+
+        paint.setAntiAlias(true);
+        paint.setDither(true);
+    }
+
+    // Draw cell with canvas, position, color
+    public void drawCell(Canvas canvas, int i, int j, int color, int gridSize) {
+        x = gridSize*i;
+        y = gridSize*j;
+        SIZE = gridSize;
+        paint.setColor(color);
+        canvas.drawRoundRect(new RectF(x - SIZE / 2, y - SIZE / 2, x + SIZE / 2, y + SIZE / 2), CORNER, CORNER, paint);
+    }
+}

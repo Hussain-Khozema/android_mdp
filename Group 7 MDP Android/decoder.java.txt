@@ -1,0 +1,168 @@
+package com.example.android.MDP;
+
+import android.util.Log;
+
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+/**
+ * Created by Sean on 2/20/2017.
+ */
+
+import android.util.Log;
+
+
+import java.lang.reflect.Array;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+/**
+ * Created by Sean on 2/20/2017.
+ */
+
+public class decoder {
+    String tempString = "";
+    ArrayList obstacleList;
+    ArrayList exploreList;
+    public decoder()
+    {
+
+    }
+    public ArrayList decodeAMDGrid(String message)
+    {   int i=0;
+        String[] split = message.split("g");
+        String explored = split[0];
+        String obstacles = split[1];
+        explored= hexToBin(explored);
+        int omg=explored.length();
+        explored= explored.substring(2,omg-2);
+        BigInteger b = new BigInteger(explored, 2);
+        explored=b.toString(16);
+        android.util.Log.d("explored", String.valueOf(explored));
+        String [] tempArray = explored.split("");
+        String [] arenaArray= new String[75];
+
+        if (explored.matches("0"))
+        {
+            Arrays.fill(arenaArray,"0");
+        }
+        else {
+            for (int x = 1; x < tempArray.length; x++) {
+
+                arenaArray[i] = tempArray[x];
+                i++;
+
+            }
+        }
+        android.util.Log.d("arenaArray0", String.valueOf(arenaArray.length));
+        ArrayList cellArrayList = convertHexToInt(arenaArray);
+
+        exploreList = cellArrayList;
+        return cellArrayList;
+    }
+
+
+
+    public ArrayList decodeObstaclesGrid(String message, ArrayList exploredArray)  {
+        int i=0;
+        String[] split = message.split("g");
+        String explored = split[0];
+        String split2 = split[1];
+        String [] spilt2 = split2.split("_");
+        String obstacles= spilt2[0];
+        if(obstacles.isEmpty())
+        {    ArrayList omg= new ArrayList();
+            return omg;
+        }
+        obstacles=obstacles.replace("g","");
+        String binary = hexToBin(obstacles);
+        String wtf="";
+
+
+        int size = obstacles.length()*4;
+        size=size-binary.length();
+        android.util.Log.d("Stringsize", String.valueOf(size));
+        for(int z=0;z<size;z++)
+        {
+            wtf+="0";
+        }
+        String realBinary= wtf+binary;
+        android.util.Log.d("binary", String.valueOf(wtf));
+        android.util.Log.d("binary", String.valueOf(realBinary));
+        String[] newObstacles= obstacles.split("");
+
+        android.util.Log.d("explor4edwtf", String.valueOf(exploredArray.size()));
+        String[] tempArray= new String[newObstacles.length-1];
+
+       /* for(int x=1;x<newObstacles.length;x++)
+        {
+            tempArray[i]=newObstacles[x];
+            i++;
+        }*/
+        ArrayList cellArrayList= new ArrayList();
+
+        for(int z=0; z<realBinary.length();z++)
+        {
+            if(realBinary.charAt(z)=='1')
+            {
+                cellArrayList.add(exploredArray.get(z));
+            }
+        }
+
+
+        obstacleList = cellArrayList;
+        return cellArrayList;
+
+    }
+    public String decodeMovement(String message){
+        String [] split = message.split("_");
+        String movement= split[1];
+        return movement;
+    }
+
+    private ArrayList convertHexToInt(String[] string) {
+
+        ArrayList obstacleCells = new ArrayList();
+
+        for (int i = 0; i < string.length; i++) {
+
+            //Convert hex value of 4x squares into integer
+            int binary = (Integer.parseInt(string[i], 16));
+
+
+            //Convert the integer value into Binary
+            String binaryTempString = Integer.toBinaryString(binary);
+            while (binaryTempString.length() < 4) {    //pad with 16 0'
+                binaryTempString = "0"+ binaryTempString ;
+            }
+
+            //Split the binary characters into array of 4 sized
+            String[] binaryTempArray = binaryTempString.split("");
+
+
+            String[] binaryArray = Arrays.copyOfRange(binaryTempArray, 1,binaryTempArray.length);
+
+            // android.util.Log.d("WTF556", String.valueOf(Arrays.toString(binaryArray)));
+            for (int j = 0; j < binaryArray.length; j++) {
+                if (Integer.parseInt(binaryArray[j]) == 1) {
+                    Integer finalValue = (i * 4) + (j + 1);
+                    obstacleCells.add(finalValue);
+                }
+            }
+
+        }
+
+        return obstacleCells;
+    }
+
+
+    public String hexToBin(String s) {
+
+        return new BigInteger(s, 16).toString(2);
+    }
+
+
+}
