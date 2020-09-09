@@ -73,6 +73,6 @@ public class DebugFragment extends Fragment {
     }
 
     public void setReceiveET(String receivedText) {
-        receiveET.setText(receiveET.getText() + receivedText);
+        receiveET.setText(receiveET.getText() + "\n" + receivedText);
     }
 }

@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.example.group7.mdp.Arena.ArenaView;
 import com.example.group7.mdp.Bluetooth.BluetoothService;
+import com.example.group7.mdp.Configuration.Operation;
 import com.example.group7.mdp.Configuration.Protocol;
 import com.example.group7.mdp.MainActivity;
 import com.example.group7.mdp.R;
@@ -26,7 +27,7 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class ControlFragment extends Fragment {
     private TextView tvStatus, tvMdfstring1, tvMdfstring2, tvIDStatus;
-    private Button autoBtn, updateBtn, tiltBtn, Explore;
+    private Button autoBtn, updateBtn, tiltBtn, Explore, btnF1, btnF2;
     public ArenaView arenaView;
     private SharedPreferences sharedPrefs;
     private boolean preferencesExist = false;
@@ -71,6 +72,38 @@ public class ControlFragment extends Fragment {
         rightMessageBuffer = new ArrayList<>();
 
         sharedPrefs = getActivity().getSharedPreferences(Protocol.PROTOCOLPREF, MODE_PRIVATE);
+
+        // NEW F1 BUTTON CONTROL
+        btnF1 = view.findViewById(R.id.btnF1);
+        btnF1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SharedPreferences sharedPrefs = getActivity().getSharedPreferences(Protocol.PROTOCOLPREF, MODE_PRIVATE);
+                if(sharedPrefs.contains(getActivity().getResources().getString(R.string.f1))) {
+                    BluetoothService.getInstance().sendText(sharedPrefs.getString(getActivity().getResources().getString(R.string.f1), ""), getActivity());
+                    Operation.showToast(getActivity(), sharedPrefs.getString(getActivity().getResources().getString(R.string.f1), "") + " was sent.");
+                } else {
+                    BluetoothService.getInstance().sendText(Protocol.F1, getActivity());
+                    Operation.showToast(getActivity(), Protocol.F1 + " was sent.");
+                }
+            }
+        });
+
+        // NEW F2 BUTTON CONTROL
+        btnF2 = view.findViewById(R.id.btnF2);
+        btnF2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SharedPreferences sharedPrefs = getActivity().getSharedPreferences(Protocol.PROTOCOLPREF, MODE_PRIVATE);
+                if(sharedPrefs.contains(getActivity().getResources().getString(R.string.f2))) {
+                    BluetoothService.getInstance().sendText(sharedPrefs.getString(getActivity().getResources().getString(R.string.f2), ""), getActivity());
+                    Operation.showToast(getActivity(), sharedPrefs.getString(getActivity().getResources().getString(R.string.f2), "") + " was sent.");
+                } else {
+                    BluetoothService.getInstance().sendText(Protocol.F2, getActivity());
+                    Operation.showToast(getActivity(), Protocol.F2 + " was sent.");
+                }
+            }
+        });
 
         //Left Rotate control button
         ctrl_left.setOnClickListener(new View.OnClickListener() {
