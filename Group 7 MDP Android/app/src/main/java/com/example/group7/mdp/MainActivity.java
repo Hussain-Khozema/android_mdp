@@ -1160,12 +1160,17 @@ public class MainActivity extends AppCompatActivity
                         arenaview.invalidate();
                     }
                     // AMD sent a grid string
+                    else if(readMessage.startsWith("{\"grid\" :")){
+                        //BluetoothService.getInstance().sendText(readMessage, this);
+                        handleGridUpdate(readMessage.substring(11, readMessage.length()-2));
+                    }
                     // For Testing AMD Status Checkpoint
                     else if(readMessage.startsWith("{\"status\":")){
                         ctrlFragment.setStatus(readMessage.substring(11, readMessage.length()-2));
                     }
                     // For Updating of AMD Robot position
                     else if(readMessage.startsWith("{\"robotPosition\" :")) {
+                        //BluetoothService.getInstance().sendText(readMessage, this);
                         readMessage = readMessage.substring(20, readMessage.length()-2);
                         String[] message = readMessage.split(",");
                         arenaview.getArena().getRobot().setPosition(Integer.parseInt(message[1].trim()) +1, Integer.parseInt(message[0].trim()) + 1);
@@ -1271,16 +1276,15 @@ public class MainActivity extends AppCompatActivity
     }
 
     //Legacy code, this is for the stupid AMD tool
-    /*
+
     private void handleGridUpdate(String gridData) {
-        arenaview.getArena().updateGridMap(gridData);
-        ctrlFragment.setMDF1(arenaview.getArena().getMDF1());
-        ctrlFragment.setMDF2(arenaview.getArena().getMDF2());
+        arenaview.getArena().updateGridMap(Operation.hexToBinary(gridData));
+        ctrlFragment.setMDF1(gridData);
         if(ctrlFragment.getAutoStatus()) {
             arenaview.invalidate();
         }
     }
-    */
+
 
     private void handlePCGridUpdate(String part1, String part2) {
         arenaview.getArena().updateGridMapFromPc(Operation.hexToBinary(part1), Operation.hexToBinary(part2));
