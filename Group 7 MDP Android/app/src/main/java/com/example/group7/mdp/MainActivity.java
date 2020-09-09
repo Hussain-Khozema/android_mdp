@@ -487,8 +487,8 @@ public class MainActivity extends AppCompatActivity
                                 String.valueOf(mod((oldY-15), 15)) + ", Y: " + String.valueOf(mod((19-oldX), 20)) + " to X: " +
                                 newX + ", Y: " + newY + "\n", this);*/
                         BluetoothService.getInstance().sendText("coordinate (" +
-                                String.valueOf(arenaview.getArena().getRobot().getYPos()-1) + "," +
-                                String.valueOf(arenaview.getArena().getRobot().getXPos()-1) + ")", this);
+                                String.valueOf(arenaview.getArena().getRobot().getYPos()) + "," +
+                                String.valueOf(19-arenaview.getArena().getRobot().getXPos()) + ")", this);
                     } else {
                         Operation.showToast(this, "No change to the position of the Robot.");
                     }

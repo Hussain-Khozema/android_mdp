@@ -67,30 +67,34 @@ public class ViewDialog {
 
                 // Get robot x and y pos
                 r_x = mainActivity.mod(Integer.parseInt(spInitialX.getText().toString()), 14);
-                r_y = mainActivity.mod(19-Integer.parseInt(spInitialY.getText().toString()), 19);
+                r_y = mainActivity.mod(19 - Integer.parseInt(spInitialY.getText().toString()), 19);
 
                 // Get waypoint x and y pos
-                int old_x = mainActivity.getArenaview().getArena().getWayPoint().getXPos();
-                int old_y = mainActivity.getArenaview().getArena().getWayPoint().getYPos();
+                int old_waypoint_x = mainActivity.getArenaview().getArena().getWayPoint().getXPos();
+                int old_waypoint_y = mainActivity.getArenaview().getArena().getWayPoint().getYPos();
                 w_x = mainActivity.mod(Integer.parseInt(spwpInitialX.getText().toString()), 14);
-                w_y = mainActivity.mod(19-Integer.parseInt(spwpInitialY.getText().toString()), 19);
+                w_y = mainActivity.mod(19 - Integer.parseInt(spwpInitialY.getText().toString()), 19);
 
                 Integer.parseInt(spwpInitialY.getText().toString());
-
 
 
                 mainActivity.getArenaview().getArena().getWayPoint().setPosition(w_y, w_x);
 
 
                 mainActivity.getArenaview().getArena().getRobot().setPosition(r_y, r_x);
-
+                if ((mainActivity.mod((old_waypoint_y - 14), 14) == w_x) && (mainActivity.mod((19 - old_waypoint_x), 19) == 19 - w_y)) {
+                    BluetoothService.getInstance().sendText("No change in Waypoint coordinates", mainActivity);
+                    dialog.dismiss();
+                }
+                else{
                 BluetoothService.getInstance().sendText("Waypoint position changed from X: " +
-                        String.valueOf(mainActivity.mod((old_y-14), 14)) + ", Y: " + String.valueOf(mainActivity.mod((19-old_x), 19)) + " to X: " +
-                        w_x + ", Y: " + Integer.toString(19-w_y) + "\n", mainActivity);
+                        String.valueOf(mainActivity.mod((old_waypoint_y - 14), 14)) + ", Y: " + String.valueOf(mainActivity.mod((19 - old_waypoint_x), 19)) + " to X: " +
+                        w_x + ", Y: " + Integer.toString(19 - w_y) + "\n", mainActivity);
                 mainActivity.getArenaview().invalidate();
 
                 //Close dialog
                 dialog.dismiss();
+                }
             }
         });
 
