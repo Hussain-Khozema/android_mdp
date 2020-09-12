@@ -58,6 +58,7 @@ import com.example.group7.mdp.Fragments.DebugFragment;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Vector;
@@ -428,6 +429,13 @@ public class MainActivity extends AppCompatActivity
         activateIdleCountDownTimer();
     }
 
+
+
+
+
+
+
+
     // Shortcut to set the Robot or Waypoint follow by it's X and Y position
     public void setRobotPosition (boolean s) {
         this.setRobotPosition = s;
@@ -442,6 +450,14 @@ public class MainActivity extends AppCompatActivity
 
 
     }
+
+
+
+
+
+
+
+
 
     // Set inputWayPointPosition
     public void inputWayPointPosition(int type) {
@@ -907,6 +923,12 @@ public class MainActivity extends AppCompatActivity
 
                 break;
 
+
+
+
+
+
+
             case Protocol.MESSAGE_WRITE:
                 byte[] writeBuf = msg.getData().getByteArray(Protocol.MESSAGE_BUFFER);
                 String writeMessage = new String(writeBuf);
@@ -1159,6 +1181,13 @@ public class MainActivity extends AppCompatActivity
                         }
                         arenaview.invalidate();
                     }
+
+
+
+
+
+
+
                     // AMD sent a grid string
                     else if(readMessage.startsWith("{\"grid\" :")){
                         //BluetoothService.getInstance().sendText(readMessage, this);

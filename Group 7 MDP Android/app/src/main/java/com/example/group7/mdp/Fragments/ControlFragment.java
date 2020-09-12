@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.util.Log;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +27,7 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class ControlFragment extends Fragment {
     private TextView tvStatus, tvMdfstring1, tvMdfstring2, tvIDStatus;
-    private Button autoBtn, updateBtn, tiltBtn, Explore, btnF1, btnF2;
+    private Button autoBtn, updateBtn, tiltBtn, Explore, btnF1, btnF2, btn_calibrate;
     public ArenaView arenaView;
     private SharedPreferences sharedPrefs;
     private boolean preferencesExist = false;
@@ -42,7 +42,7 @@ public class ControlFragment extends Fragment {
 
 //  ImageView ctrl_center;
 
-
+    private static final String TAG = "ControlFragment";
     public ControlFragment() {
         // Required empty public constructor
     }
@@ -66,6 +66,7 @@ public class ControlFragment extends Fragment {
         ctrl_reverse = view.findViewById(R.id.ctrl_bottom);
 //        ctrl_center = view.findViewById(R.id.center);
         Button sendArena = view.findViewById(R.id.SendArenaInfo);
+
 
         arenaView = ((MainActivity)getActivity()).getArenaview();
         leftMessageBuffer = new ArrayList<>();
@@ -104,6 +105,19 @@ public class ControlFragment extends Fragment {
                 }
             }
         });
+
+
+        // NEW CALIBRATE
+        Button btn_calibrate = view.findViewById(R.id.btn_calibrateRobot);
+        btn_calibrate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                BluetoothService.getInstance().sendText(Protocol.START_CALIBRATE,getActivity());
+                Operation.showToast(getActivity()," Android Controller: Calibrate sent");
+            }
+        } );
+
+
 
         //Left Rotate control button
         ctrl_left.setOnClickListener(new View.OnClickListener() {
@@ -337,6 +351,12 @@ public class ControlFragment extends Fragment {
             preferencesExist = false;
         }
 
+
+
+
+
+
+
         tiltBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -397,5 +417,11 @@ public class ControlFragment extends Fragment {
     }
 
     public boolean getAutoStatus() { return autoMode; }
+
+
+
+
+
+
 }
 

@@ -19,6 +19,7 @@ public interface Protocol {
     String PROTOCOLPREF = "protocolPref";
     String F1 = "F1";
     String F2 = "F2";
+    String START_CALIBRATE = "start calibrate";
 
     String MESSAGE_TYPE   = "MESSAGE_TYPE";
     String MESSAGE_BYTES  = "MESSAGE_BYTES";
@@ -33,6 +34,8 @@ public interface Protocol {
     String STATUS_TURN_RIGHT = "Turning Right";
     String STATUS_REVERSE = "Reversing";
     String STATUS_IDLE = "Idling";
+
+
 
     String MOVE_FORWARD = "W";
     String TURN_LEFT    = "A";

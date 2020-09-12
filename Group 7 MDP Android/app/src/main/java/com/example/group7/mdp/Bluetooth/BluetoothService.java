@@ -251,6 +251,15 @@ public class BluetoothService extends Service{
         }
     }
 
+
+
+
+
+
+
+
+
+
     /**
      * Indicate that the connection attempt failed and notify the UI Activity.
      */

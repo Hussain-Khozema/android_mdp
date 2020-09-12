@@ -892,6 +892,7 @@ id btnManual
 id btnReset
 id btnSetup
 id btnSubmit
+id btn_calibrateRobot
 id buttonPanel
 id cancel_action
 id center

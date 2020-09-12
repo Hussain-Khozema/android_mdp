@@ -96,16 +96,53 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="40dp"
-                android:layout_marginRight="40dp"
+                android:layout_marginRight="45dp"
                 android:background="@color/copper"
                 android:padding="4dp"
                 android:text="Send Arena"
                 android:textColor="@color/white" />
 
+            <Button
+                android:id="@+id/btn_calibrateRobot"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="250dp"
+                android:layout_marginRight="45dp"
+                android:background="@color/copper"
+                android:text="Calibrate"
+                android:textColor="@color/white" />
+
+            <RelativeLayout
+                android:id="@+id/rlController"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginRight="-1dp"
+                android:gravity="right|bottom"
+                android:paddingRight="33dp"
+                android:paddingBottom="294dp">
 
 
+                <ImageView
+                    android:id="@+id/ctrl_left"
+                    android:layout_width="61dp"
+                    android:layout_height="59dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginLeft="240dp"
+                    android:layout_marginTop="440dp"
+                    android:background="@drawable/left_button" />
 
-
+                <ImageView
+                    android:id="@+id/ctrl_right"
+                    android:layout_width="61dp"
+                    android:layout_height="59dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginLeft="324dp"
+                    android:layout_marginTop="440dp"
+                    android:background="@drawable/right_button" />
+            </RelativeLayout>
 
 
         </RelativeLayout>
@@ -119,38 +156,6 @@
             android:layout_marginRight="75dp"
             android:layout_marginBottom="352dp"
             android:background="@drawable/up_button" />
-
-        <RelativeLayout
-            android:id="@+id/rlController"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="0dp"
-            android:gravity="right|bottom"
-            android:paddingRight="33dp"
-            android:paddingBottom="294dp">
-
-
-            <ImageView
-                android:id="@+id/ctrl_left"
-                android:layout_width="61dp"
-                android:layout_height="59dp"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginLeft="240dp"
-                android:layout_marginTop="470dp"
-                android:background="@drawable/left_button" />
-
-            <ImageView
-                android:id="@+id/ctrl_right"
-                android:layout_width="61dp"
-                android:layout_height="59dp"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginLeft="324dp"
-                android:layout_marginTop="470dp"
-                android:background="@drawable/right_button" />
-        </RelativeLayout>
 
         <ImageView
             android:id="@+id/ctrl_bottom"
