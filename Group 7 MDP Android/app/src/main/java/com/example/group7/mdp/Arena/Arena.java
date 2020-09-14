@@ -32,7 +32,7 @@ public class  Arena {
         //this is where the idblock has its position.
 
         for(int i=0;i<arrIDBlock.length;i++){
-            arrIDBlock[i]=new IDBlock(18,1);
+            arrIDBlock[i]=new IDBlock(5,10);
         }
 
 

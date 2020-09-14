@@ -220,8 +220,13 @@ public class ControlFragment extends Fragment {
                 if(forwardDelayHandler == null) {
                     if (((MainActivity) getActivity()).getConnectedDeviceName() != null && ((MainActivity) getActivity()).getConnectedDeviceName().equalsIgnoreCase(Protocol.AMD_DEVICE_NAME) &&
                             ((MainActivity) getActivity()).getConnectedDeviceMac() != null && ((MainActivity) getActivity()).getConnectedDeviceMac().equalsIgnoreCase(Protocol.AMD_DEVICE_MAC)) {
-                        BluetoothService.getInstance().sendText(Protocol.AMD_MOVE_FORWARD.toString(), getActivity());
-                        arenaView.getArena().getRobot().moveForward(true);
+                        boolean check = arenaView.getArena().getRobot().moveForward(true);
+                        if (check) {
+                            BluetoothService.getInstance().sendText(Protocol.AMD_MOVE_FORWARD.toString(), getActivity());
+                        }
+
+
+
                         setStatus(Protocol.STATUS_FORWARD);
                         ((MainActivity) getActivity()).activateIdleCountDownTimer();
                     } else if (arenaView.getArena().getRobot().moveForward(false)) {
@@ -253,8 +258,11 @@ public class ControlFragment extends Fragment {
                 if(reverseDelayHandler == null) {
                     if (((MainActivity) getActivity()).getConnectedDeviceName() != null && ((MainActivity) getActivity()).getConnectedDeviceName().equalsIgnoreCase(Protocol.AMD_DEVICE_NAME) &&
                             ((MainActivity) getActivity()).getConnectedDeviceMac() != null && ((MainActivity) getActivity()).getConnectedDeviceMac().equalsIgnoreCase(Protocol.AMD_DEVICE_MAC)) {
-                        BluetoothService.getInstance().sendText(Protocol.AMD_REVERSE.toString(), getActivity());
-                        arenaView.getArena().getRobot().reverse(true);
+                        boolean check = arenaView.getArena().getRobot().reverse(true);
+                        if (check) {
+                            BluetoothService.getInstance().sendText(Protocol.AMD_REVERSE.toString(), getActivity());
+                        }
+
                         setStatus(Protocol.STATUS_REVERSE);
                         ((MainActivity) getActivity()).activateIdleCountDownTimer();
                     } else if (arenaView.getArena().getRobot().reverse(false)) {

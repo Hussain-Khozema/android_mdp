@@ -1103,9 +1103,26 @@ public class MainActivity extends AppCompatActivity
                     btnFastestPath.performClick();
                 }
                 else if(readMessage.startsWith("ID")) {
+                    readMessage = readMessage.replace(" ", ",");
                     String IDCommand[] = readMessage.split(",");
+
+
+                    /*try {
+                        int IDpicture = Integer.parseInt(IDCommand[0].split(" ")[1]);
+                        int IDxcoord = Integer.parseInt(IDCommand[1]);
+                        int IDycoord = Integer.parseInt(IDCommand[2]);
+                    }
+                    catch(Exception e)
+                    {
+                        BluetoothService.getInstance().sendText("Incorrect string", this);
+                    }*/
+
+
+
+
                     //Log.d(TAG, "run: current Message: " + IDCommand[0]);
                     if (IDCommand[0].compareTo("ID") == 0 || IDCommand[0].compareTo("id") == 0) {
+                        //BluetoothService.getInstance().sendText(IDCommand[0] + " | " + IDCommand[1] + " | " +IDCommand[2] + " | " + IDCommand[3], this);
                         Log.d(TAG, "run: ID command registered");
                         //IDCommand[0]: ID
                         //IDCommand[1]: <idblock number>
@@ -1121,6 +1138,21 @@ public class MainActivity extends AppCompatActivity
 
                             if(1<=Integer.parseInt(IDCommand[1])&&Integer.parseInt(IDCommand[1])<=15){
                                 arenaview.getArena().getArrIDBlock(Integer.parseInt(IDCommand[1])-1).setPosition(Integer.parseInt(IDCommand[2])+1,Integer.parseInt(IDCommand[3])+1);
+                                //BluetoothService.getInstance().sendText(arenaview.getArena().getArrIDBlock(Integer.parseInt(IDCommand[1])-1).getXPos()+ "|" + arenaview.getArena().getArrIDBlock(Integer.parseInt(IDCommand[1])-1).getYPos() + "\n" , this);
+                                int trans_x = Math.abs(Integer.parseInt(IDCommand[3])-20);
+                                int trans_y = Integer.parseInt(IDCommand[2])+1;
+                                for (int i=0; i<15; i++)
+                                {
+                                    //BluetoothService.getInstance().sendText(Integer.toString(i+1) + "x | " + Integer.toString(arenaview.getArena().getArrIDBlock(i).getXPos()) + "| " + trans_x + "|\n", this);
+                                    //BluetoothService.getInstance().sendText(Integer.toString(i+1) + "y | " + Integer.toString(arenaview.getArena().getArrIDBlock(i).getYPos()) + "| " + trans_y + "|\n", this);
+                                    if ((i != Integer.parseInt(IDCommand[1])-1) && (arenaview.getArena().getArrIDBlock(i).getXPos() == trans_x) &&(arenaview.getArena().getArrIDBlock(i).getYPos() == trans_y))
+                                    {
+                                       // BluetoothService.getInstance().sendText(Integer.toString(i) + " | " + Integer.toString(arenaview.getArena().getArrIDBlock(i).getXPos()) + "| " + IDCommand[2] + "|\n", this);
+                                        arenaview.getArena().getArrIDBlock(i).setPosition(18,1);
+                                        arenaview.getArena().getArrIDBlock(i).resetRender();
+                                    }
+                                }
+
                                 arenaview.getArena().getArrIDBlock(Integer.parseInt(IDCommand[1])-1).setRender();
                                 arenaview.invalidate();
 
@@ -1134,6 +1166,10 @@ public class MainActivity extends AppCompatActivity
                                     }
 
                                 }
+                            }
+                            else
+                            {
+                                Operation.showToast(getApplicationContext(), "Invalid Image ID received ");
                             }
 
                         }
@@ -1199,18 +1235,18 @@ public class MainActivity extends AppCompatActivity
                     }
                     // For Updating of AMD Robot position
                     else if(readMessage.startsWith("{\"robotPosition\" :")) {
-                        //BluetoothService.getInstance().sendText(readMessage, this);
+                       // BluetoothService.getInstance().sendText(readMessage, this);
                         readMessage = readMessage.substring(20, readMessage.length()-2);
                         String[] message = readMessage.split(",");
                         arenaview.getArena().getRobot().setPosition(Integer.parseInt(message[1].trim()) +1, Integer.parseInt(message[0].trim()) + 1);
                         switch((Integer.parseInt(message[2].trim()))) {
                             case 0: arenaview.getArena().getRobot().setDirection(Robot.Direction.NORTH);
                                 break;
-                            case 1: arenaview.getArena().getRobot().setDirection(Robot.Direction.EAST);
+                            case 90: arenaview.getArena().getRobot().setDirection(Robot.Direction.EAST);
                                 break;
-                            case 2: arenaview.getArena().getRobot().setDirection(Robot.Direction.SOUTH);
+                            case 180: arenaview.getArena().getRobot().setDirection(Robot.Direction.SOUTH);
                                 break;
-                            case 3: arenaview.getArena().getRobot().setDirection(Robot.Direction.WEST);
+                            case 270: arenaview.getArena().getRobot().setDirection(Robot.Direction.WEST);
                                 break;
                             default:
                         }

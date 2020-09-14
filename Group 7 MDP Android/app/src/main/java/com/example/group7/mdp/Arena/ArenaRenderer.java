@@ -6,6 +6,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -85,6 +87,8 @@ public class ArenaRenderer {
         canvas.drawBitmap(scaledBitmap, matrix, paint);
     }
 
+
+
     //renders all the blocks if they have been discovered
     public static void renderIDBlock(Canvas canvas, IDBlock idblock, int gridSize, Context context, int ID)
     {
@@ -149,6 +153,17 @@ public class ArenaRenderer {
             //postTranslate is like transpose the matrix
             IDBlockMatrix.postTranslate((gridSize / 2 + gridSize * (idblock.getYPos() - 1)) + gridSize,
                     gridSize / 2 + gridSize * (idblock.getXPos() - 1));
+
+            /*Paint mPaint = new Paint();
+
+            mPaint = new Paint();
+            mPaint.setAlpha(0);
+            mPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
+            mPaint.setAntiAlias(true);*/
+
+
+
+            //canvas.drawBitmap(null, IDBlockMatrix, null);
             canvas.drawBitmap(IDBlockBitmap, IDBlockMatrix, paint);
         }
     }
