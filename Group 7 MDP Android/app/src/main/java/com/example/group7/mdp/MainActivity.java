@@ -1136,35 +1136,41 @@ public class MainActivity extends AppCompatActivity
                             }
                             //ctrlFragment.setIDString(IDString);
 
-                            if(1<=Integer.parseInt(IDCommand[1])&&Integer.parseInt(IDCommand[1])<=15){
-                                arenaview.getArena().getArrIDBlock(Integer.parseInt(IDCommand[1])-1).setPosition(Integer.parseInt(IDCommand[2])+1,Integer.parseInt(IDCommand[3])+1);
-                                //BluetoothService.getInstance().sendText(arenaview.getArena().getArrIDBlock(Integer.parseInt(IDCommand[1])-1).getXPos()+ "|" + arenaview.getArena().getArrIDBlock(Integer.parseInt(IDCommand[1])-1).getYPos() + "\n" , this);
-                                int trans_x = Math.abs(Integer.parseInt(IDCommand[3])-20);
-                                int trans_y = Integer.parseInt(IDCommand[2])+1;
-                                for (int i=0; i<15; i++)
-                                {
-                                    //BluetoothService.getInstance().sendText(Integer.toString(i+1) + "x | " + Integer.toString(arenaview.getArena().getArrIDBlock(i).getXPos()) + "| " + trans_x + "|\n", this);
-                                    //BluetoothService.getInstance().sendText(Integer.toString(i+1) + "y | " + Integer.toString(arenaview.getArena().getArrIDBlock(i).getYPos()) + "| " + trans_y + "|\n", this);
-                                    if ((i != Integer.parseInt(IDCommand[1])-1) && (arenaview.getArena().getArrIDBlock(i).getXPos() == trans_x) &&(arenaview.getArena().getArrIDBlock(i).getYPos() == trans_y))
-                                    {
-                                       // BluetoothService.getInstance().sendText(Integer.toString(i) + " | " + Integer.toString(arenaview.getArena().getArrIDBlock(i).getXPos()) + "| " + IDCommand[2] + "|\n", this);
-                                        arenaview.getArena().getArrIDBlock(i).setPosition(18,1);
-                                        arenaview.getArena().getArrIDBlock(i).resetRender();
+                            if(1<=Integer.parseInt(IDCommand[1])&&Integer.parseInt(IDCommand[2])<=15){
+                                //BluetoothService.getInstance().sendText(IDCommand[2], this);
+                                if(0<=Integer.parseInt(IDCommand[2])&&Integer.parseInt(IDCommand[2])<=14 && 0<=Integer.parseInt(IDCommand[3])&&Integer.parseInt(IDCommand[3])<=19) {
+
+                                    arenaview.getArena().getArrIDBlock(Integer.parseInt(IDCommand[1]) - 1).setPosition(Integer.parseInt(IDCommand[2]) + 1, Integer.parseInt(IDCommand[3]) + 1);
+                                    //BluetoothService.getInstance().sendText(arenaview.getArena().getArrIDBlock(Integer.parseInt(IDCommand[1])-1).getXPos()+ "|" + arenaview.getArena().getArrIDBlock(Integer.parseInt(IDCommand[1])-1).getYPos() + "\n" , this);
+                                    int trans_x = Math.abs(Integer.parseInt(IDCommand[3]) - 20);
+                                    int trans_y = Integer.parseInt(IDCommand[2]) + 1;
+                                    for (int i = 0; i < 15; i++) {
+                                        //BluetoothService.getInstance().sendText(Integer.toString(i+1) + "x | " + Integer.toString(arenaview.getArena().getArrIDBlock(i).getXPos()) + "| " + trans_x + "|\n", this);
+                                        //BluetoothService.getInstance().sendText(Integer.toString(i+1) + "y | " + Integer.toString(arenaview.getArena().getArrIDBlock(i).getYPos()) + "| " + trans_y + "|\n", this);
+                                        if ((i != Integer.parseInt(IDCommand[1]) - 1) && (arenaview.getArena().getArrIDBlock(i).getXPos() == trans_x) && (arenaview.getArena().getArrIDBlock(i).getYPos() == trans_y)) {
+                                            // BluetoothService.getInstance().sendText(Integer.toString(i) + " | " + Integer.toString(arenaview.getArena().getArrIDBlock(i).getXPos()) + "| " + IDCommand[2] + "|\n", this);
+                                            arenaview.getArena().getArrIDBlock(i).setPosition(18, 1);
+                                            arenaview.getArena().getArrIDBlock(i).resetRender();
+                                        }
+                                    }
+
+                                    arenaview.getArena().getArrIDBlock(Integer.parseInt(IDCommand[1]) - 1).setRender();
+                                    arenaview.invalidate();
+
+
+                                    ctrlFragment.resetIDString();
+
+                                    for (int i = 0; i < 15; i++) {
+                                        if (arenaview.getArena().getArrIDBlock(i).getRender()) {
+                                            String output = (i + 1) + "," + (arenaview.getArena().getArrIDBlock(i).getYPos() - 1) + "," + (20 - arenaview.getArena().getArrIDBlock(i).getXPos());
+                                            ctrlFragment.setTvStatus(output);
+                                        }
+
                                     }
                                 }
-
-                                arenaview.getArena().getArrIDBlock(Integer.parseInt(IDCommand[1])-1).setRender();
-                                arenaview.invalidate();
-
-
-                                ctrlFragment.resetIDString();
-
-                                for(int i=0;i<15;i++){
-                                    if(arenaview.getArena().getArrIDBlock(i).getRender()){
-                                        String output=(i+1)+","+(arenaview.getArena().getArrIDBlock(i).getYPos()-1)+","+(20-arenaview.getArena().getArrIDBlock(i).getXPos());
-                                        ctrlFragment.setTvStatus(output);
-                                    }
-
+                                else
+                                {
+                                    Operation.showToast(getApplicationContext(), "Invalid cood received ");
                                 }
                             }
                             else
