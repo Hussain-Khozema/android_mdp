@@ -1002,9 +1002,12 @@ public class MainActivity extends AppCompatActivity
                 else if(readMessage.startsWith("grid")) {
                     try{
                         Log.d(TAG, "handleMessage: actual sent message:"+readMessage);
+                        BluetoothService.getInstance().sendText(readMessage, this);
 
                         String mdfStrings[]=readMessage.split(",");
-                        arenaview.getArena().getRobot().setPosition(Math.abs(21-Integer.valueOf(mdfStrings[4])-1),Integer.valueOf(mdfStrings[3])-1);
+                        arenaview.getArena().getRobot().setPosition(Math.abs(21-Integer.valueOf(mdfStrings[4]))-2,Integer.valueOf(mdfStrings[3]));
+                        BluetoothService.getInstance().sendText(String.valueOf(arenaview.getArena().getRobot().getXPos())+String.valueOf(arenaview.getArena().getRobot().getYPos()), this);
+
 
                         switch((Integer.parseInt(mdfStrings[5].trim()))) {
                             case 0: arenaview.getArena().getRobot().setDirection(Robot.Direction.NORTH);
@@ -1025,7 +1028,7 @@ public class MainActivity extends AppCompatActivity
 
                 }
                 else if(readMessage.startsWith("wpwait")) {
-                    String wpString="yy,"+(arenaview.getArena().getWayPoint().getYPos()+1)+","+Math.abs(21-arenaview.getArena().getWayPoint().getXPos()-1);
+                    String wpString="yy,"+(arenaview.getArena().getWayPoint().getYPos())+","+Math.abs(21-arenaview.getArena().getWayPoint().getXPos()-2);
                     byte[] transmission= wpString.getBytes();
                     btService.write(transmission);
                     //btService.sendText(wpString,getApplicationContext());
@@ -1033,7 +1036,7 @@ public class MainActivity extends AppCompatActivity
                 else if(readMessage.startsWith("stopExplore")){
                     btnExplore.performClick();
 
-                    String wpString="yy,"+(arenaview.getArena().getWayPoint().getYPos()+1)+","+Math.abs(21-arenaview.getArena().getWayPoint().getXPos()-1);
+                    String wpString="yy,"+(arenaview.getArena().getWayPoint().getYPos())+","+Math.abs(21-arenaview.getArena().getWayPoint().getXPos()-2);
                     byte[] transmission= wpString.getBytes();
                     btService.write(transmission);
                 }
@@ -1043,7 +1046,7 @@ public class MainActivity extends AppCompatActivity
                     try{
                         String mdfStrings[]=readMessage.split(",");
                         //mdfStrings[1] is the command that the PC would be sending to arduino
-                        if(mdfStrings[1].startsWith("O")){
+                        if(mdfStrings[1].startsWith("A")){
                             arenaview.getArena().getRobot().turnLeft();
                             arenaview.invalidate();
                         }
@@ -1054,7 +1057,7 @@ public class MainActivity extends AppCompatActivity
                         else{
                             int fwdSteps=0;
                             switch(mdfStrings[1]){
-                                case("!"):
+                                case("1"):
                                     fwdSteps=1;
                                     break;
                                 case("@"):
@@ -1186,81 +1189,81 @@ public class MainActivity extends AppCompatActivity
                 }
                 //Message may come from AMD Tool (which we'll ignore for the actual run since... it's useless)
 
-                else {
-                    // AMD sent a move forward
-                    if(readMessage.equals(Protocol.AMD_MOVE_FORWARD)) {
-                        arenaview.getArena().getRobot().moveForward(true);
-                        BluetoothService.getInstance().sendText(Protocol.AMD_MOVE_FORWARD.toString(), this);
-                        if(ctrlFragment != null) {
-                            ctrlFragment.setStatus(Protocol.STATUS_FORWARD);
-                        }
-                        arenaview.invalidate();
-                    }
-                    // AMD sent a turn left
-                    else if(readMessage.equals(Protocol.AMD_TURN_LEFT)) {
-                        arenaview.getArena().getRobot().turnLeft();
-                        BluetoothService.getInstance().sendText(Protocol.AMD_TURN_LEFT.toString(), this);
-                        if(ctrlFragment != null) {
-                            ctrlFragment.setStatus(Protocol.STATUS_TURN_LEFT);
-                        }
-                        arenaview.invalidate();
-                    }
-                    // AMD sent a turn right
-                    else if(readMessage.equals(Protocol.AMD_TURN_RIGHT)) {
-                        arenaview.getArena().getRobot().turnRight();
-                        BluetoothService.getInstance().sendText(Protocol.AMD_TURN_RIGHT.toString(), this);
-                        if(ctrlFragment != null) {
-                            ctrlFragment.setStatus(Protocol.STATUS_TURN_RIGHT);
-                        }
-                        arenaview.invalidate();
-                    }
-                    // AMD sent a reverse
-                    else if(readMessage.equals(Protocol.AMD_REVERSE)) {
-                        arenaview.getArena().getRobot().reverse(true);
-                        BluetoothService.getInstance().sendText(Protocol.AMD_REVERSE.toString(), this);
-                        if(ctrlFragment != null) {
-                            ctrlFragment.setStatus(Protocol.STATUS_REVERSE);
-                        }
-                        arenaview.invalidate();
-                    }
-
-
-
-
-
-
-
-                    // AMD sent a grid string
-                    else if(readMessage.startsWith("{\"grid\" :")){
-                        //BluetoothService.getInstance().sendText(readMessage, this);
-                        handleGridUpdate(readMessage.substring(11, readMessage.length()-2));
-                    }
-                    // For Testing AMD Status Checkpoint
-                    else if(readMessage.startsWith("{\"status\":")){
-                        ctrlFragment.setStatus(readMessage.substring(11, readMessage.length()-2));
-                    }
-                    // For Updating of AMD Robot position
-                    else if(readMessage.startsWith("{\"robotPosition\" :")) {
-                       // BluetoothService.getInstance().sendText(readMessage, this);
-                        readMessage = readMessage.substring(20, readMessage.length()-2);
-                        String[] message = readMessage.split(",");
-                        arenaview.getArena().getRobot().setPosition(Integer.parseInt(message[1].trim()) +1, Integer.parseInt(message[0].trim()) + 1);
-                        switch((Integer.parseInt(message[2].trim()))) {
-                            case 0: arenaview.getArena().getRobot().setDirection(Robot.Direction.NORTH);
-                                break;
-                            case 90: arenaview.getArena().getRobot().setDirection(Robot.Direction.EAST);
-                                break;
-                            case 180: arenaview.getArena().getRobot().setDirection(Robot.Direction.SOUTH);
-                                break;
-                            case 270: arenaview.getArena().getRobot().setDirection(Robot.Direction.WEST);
-                                break;
-                            default:
-                        }
-                        if(ctrlFragment.getAutoStatus()) {
-                            arenaview.invalidate();
-                        }
-                    }
-                }
+//                else {
+//                    // AMD sent a move forward
+//                    if(readMessage.equals(Protocol.AMD_MOVE_FORWARD)) {
+//                        arenaview.getArena().getRobot().moveForward(true);
+//                        BluetoothService.getInstance().sendText(Protocol.AMD_MOVE_FORWARD.toString(), this);
+//                        if(ctrlFragment != null) {
+//                            ctrlFragment.setStatus(Protocol.STATUS_FORWARD);
+//                        }
+//                        arenaview.invalidate();
+//                    }
+//                    // AMD sent a turn left
+//                    else if(readMessage.equals(Protocol.AMD_TURN_LEFT)) {
+//                        arenaview.getArena().getRobot().turnLeft();
+//                        BluetoothService.getInstance().sendText(Protocol.AMD_TURN_LEFT.toString(), this);
+//                        if(ctrlFragment != null) {
+//                            ctrlFragment.setStatus(Protocol.STATUS_TURN_LEFT);
+//                        }
+//                        arenaview.invalidate();
+//                    }
+//                    // AMD sent a turn right
+//                    else if(readMessage.equals(Protocol.AMD_TURN_RIGHT)) {
+//                        arenaview.getArena().getRobot().turnRight();
+//                        BluetoothService.getInstance().sendText(Protocol.AMD_TURN_RIGHT.toString(), this);
+//                        if(ctrlFragment != null) {
+//                            ctrlFragment.setStatus(Protocol.STATUS_TURN_RIGHT);
+//                        }
+//                        arenaview.invalidate();
+//                    }
+//                    // AMD sent a reverse
+//                    else if(readMessage.equals(Protocol.AMD_REVERSE)) {
+//                        arenaview.getArena().getRobot().reverse(true);
+//                        BluetoothService.getInstance().sendText(Protocol.AMD_REVERSE.toString(), this);
+//                        if(ctrlFragment != null) {
+//                            ctrlFragment.setStatus(Protocol.STATUS_REVERSE);
+//                        }
+//                        arenaview.invalidate();
+//                    }
+//
+//
+//
+//
+//
+//
+//
+//                    // AMD sent a grid string
+//                    else if(readMessage.startsWith("{\"grid\" :")){
+//                        //BluetoothService.getInstance().sendText(readMessage, this);
+//                        handleGridUpdate(readMessage.substring(11, readMessage.length()-2));
+//                    }
+//                    // For Testing AMD Status Checkpoint
+//                    else if(readMessage.startsWith("{\"status\":")){
+//                        ctrlFragment.setStatus(readMessage.substring(11, readMessage.length()-2));
+//                    }
+//                    // For Updating of AMD Robot position
+//                    else if(readMessage.startsWith("{\"robotPosition\" :")) {
+//                       // BluetoothService.getInstance().sendText(readMessage, this);
+//                        readMessage = readMessage.substring(20, readMessage.length()-2);
+//                        String[] message = readMessage.split(",");
+//                        arenaview.getArena().getRobot().setPosition(Integer.parseInt(message[1].trim()) +1, Integer.parseInt(message[0].trim()) + 1);
+//                        switch((Integer.parseInt(message[2].trim()))) {
+//                            case 0: arenaview.getArena().getRobot().setDirection(Robot.Direction.NORTH);
+//                                break;
+//                            case 90: arenaview.getArena().getRobot().setDirection(Robot.Direction.EAST);
+//                                break;
+//                            case 180: arenaview.getArena().getRobot().setDirection(Robot.Direction.SOUTH);
+//                                break;
+//                            case 270: arenaview.getArena().getRobot().setDirection(Robot.Direction.WEST);
+//                                break;
+//                            default:
+//                        }
+//                        if(ctrlFragment.getAutoStatus()) {
+//                            arenaview.invalidate();
+//                        }
+//                    }
+//                }
 
                 break;
 

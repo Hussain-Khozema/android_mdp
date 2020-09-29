@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "C:\\android_mdp\\Group 7 MDP Android\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-v16\\values-v16.xml",
+            "outputFile": "C:\\Users\\Admin\\Documents\\android_mdp\\Group 7 MDP Android\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-v16\\values-v16.xml",
             "map": [
                 {
                     "source": "C:\\Users\\Admin\\.gradle\\caches\\transforms-2\\files-2.1\\de5dab19474f7bc055bdbb01a97fc143\\support-compat-26.1.0\\res\\values-v16\\values-v16.xml",
