@@ -4,6 +4,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -64,6 +65,29 @@ public class SettingsActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item){
+        if(protocolFragment != null) {
+            FragmentManager fm = this.getSupportFragmentManager();
+            if(fm.getBackStackEntryCount()>0) {
+                fm.popBackStack();
+            }
+            protocolFragment = null;
+            settingsLV.setVisibility(View.VISIBLE);
+        } else if(f1F2Fragment != null) {
+            FragmentManager fm = this.getSupportFragmentManager();
+            if(fm.getBackStackEntryCount()>0) {
+                fm.popBackStack();
+            }
+            f1F2Fragment = null;
+            settingsLV.setVisibility(View.VISIBLE);
+        } else {
+            this.finish();
+        }
+
+
+        return true;
     }
 
     @Override

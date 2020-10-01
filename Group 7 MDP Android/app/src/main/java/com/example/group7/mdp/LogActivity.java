@@ -1,7 +1,13 @@
 package com.example.group7.mdp;
 
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ScrollView;
 
@@ -50,5 +56,20 @@ public class LogActivity extends AppCompatActivity {
             }
         }
         return stringBuffer.toString();
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item){
+        this.finish();
+        return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        /*Intent myIntent = new Intent(this, SettingsActivity.class);
+
+        myIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(myIntent);
+        finish();
+        return;*/
     }
 }

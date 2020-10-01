@@ -88,6 +88,8 @@ public class MainActivity extends AppCompatActivity
     private boolean setRobotPosition; // Used to determine if I am setting Robot or Waypoint position
     private int oldX, oldY;
     private CountDownTimer countDownTimer = null;
+    private boolean SettingsView = false, LogView = false;
+    CountDownTimer OneMinuteTimer = null;
 
     private long exploreMillisecondTime, exploreStartTime, exploreTimeBuff, exploreUpdateTime = 0L;
     private Handler exploreTimeHandler, sendStartCommandToPcHandler;
@@ -355,7 +357,7 @@ public class MainActivity extends AppCompatActivity
                     exploreUpdateTime = 0L;
                     //BluetoothService.getInstance().sendText(Protocol.PC_MESSAGE_HEADER + "exStop", MainActivity.this);
 
-                    new CountDownTimer(60000,1000){
+                    OneMinuteTimer = new CountDownTimer(60000,1000){
 
                         @Override
                         public void onTick(long l) {
@@ -618,7 +620,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+       DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else if (debugFragment != null) {
@@ -628,9 +630,21 @@ public class MainActivity extends AppCompatActivity
             }
             debugFragment = null;
             navigationView.getMenu().getItem(2).setChecked(false);
-        } else {
+        }
+        else if (LogView)
+        {
+            FragmentManager fm = this.getSupportFragmentManager();
+            if(fm.getBackStackEntryCount()>0) {
+                fm.popBackStack();
+            }
+            LogView = false;
+        }
+        else {
+            //goToHomeScreen();
             super.onBackPressed();
         }
+
+
     }
 
     @Override
@@ -640,19 +654,19 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_home){
 
-            if (debugFragment != null) {
+            //if (debugFragment != null) {
                 FragmentManager fm = this.getSupportFragmentManager();
                 if (fm.getBackStackEntryCount() > 0) {
                     fm.popBackStack();
                 }
                 debugFragment = null;
                 item.setChecked(false);
-            }
+            /*}
             else
             {
                 Intent intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
-            }
+            }*/
         }
         else if (id == R.id.nav_connect) {
             showBTDialog();
@@ -667,6 +681,7 @@ public class MainActivity extends AppCompatActivity
             arenaview.invalidate();
             exploreTimeTV.setText("00:00:00");
             fastestTimeTV.setText("00:00:00");
+            OneMinuteTimer.cancel();
             oneMinuteTimerTV.setText("1 Minute Timer: 00:00:00");
 
             item.setChecked(false);
@@ -677,6 +692,7 @@ public class MainActivity extends AppCompatActivity
                 btnFastestPath.performClick();
             }
         } else if (id == R.id.nav_log) {
+            LogView = true;
             Intent intent = new Intent(this, LogActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_debug) {
@@ -697,6 +713,7 @@ public class MainActivity extends AppCompatActivity
                 item.setChecked(false);
             }*/
         } else if (id == R.id.nav_settings) {
+
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
         }
@@ -1007,6 +1024,36 @@ public class MainActivity extends AppCompatActivity
                         String mdfStrings[]=readMessage.split(",");
                         arenaview.getArena().getRobot().setPosition(Math.abs(21-Integer.valueOf(mdfStrings[4]))-2,Integer.valueOf(mdfStrings[3]));
                         //BluetoothService.getInstance().sendText(String.valueOf(arenaview.getArena().getRobot().getXPos())+String.valueOf(arenaview.getArena().getRobot().getYPos()), this);
+
+                        Robot.Direction direction = arenaview.getArena().getRobot().getDirection();
+
+                        if(direction.equals("NORTH") && (Integer.parseInt(mdfStrings[5].trim())) == 1){
+                            ctrlFragment.setStatus(Protocol.STATUS_TURN_RIGHT);
+                        }
+                        else if(direction.equals("NORTH") && (Integer.parseInt(mdfStrings[5].trim())) == 3){
+                            ctrlFragment.setStatus(Protocol.STATUS_TURN_LEFT);
+                        }
+                        else if(direction.equals("EAST") && (Integer.parseInt(mdfStrings[5].trim())) == 2){
+                            ctrlFragment.setStatus(Protocol.STATUS_TURN_RIGHT);
+                        }
+                        else if(direction.equals("EAST") && (Integer.parseInt(mdfStrings[5].trim())) == 0){
+                            ctrlFragment.setStatus(Protocol.STATUS_TURN_LEFT);
+                        }
+                        else if(direction.equals("SOUTH") && (Integer.parseInt(mdfStrings[5].trim())) == 3){
+                            ctrlFragment.setStatus(Protocol.STATUS_TURN_RIGHT);
+                        }
+                        else if(direction.equals("SOUTH") && (Integer.parseInt(mdfStrings[5].trim())) == 1){
+                            ctrlFragment.setStatus(Protocol.STATUS_TURN_LEFT);
+                        }
+                        else if(direction.equals("WEST") && (Integer.parseInt(mdfStrings[5].trim())) == 0){
+                            ctrlFragment.setStatus(Protocol.STATUS_TURN_RIGHT);
+                        }
+                        else if(direction.equals("WEST") && (Integer.parseInt(mdfStrings[5].trim())) == 2){
+                            ctrlFragment.setStatus(Protocol.STATUS_TURN_LEFT);
+                        }
+                        else{
+                            ctrlFragment.setStatus(Protocol.STATUS_FORWARD);
+                        }
 
 
                         switch((Integer.parseInt(mdfStrings[5].trim()))) {
