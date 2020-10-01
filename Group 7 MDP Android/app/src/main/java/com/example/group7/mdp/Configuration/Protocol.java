@@ -42,7 +42,7 @@ public interface Protocol {
     String TURN_RIGHT   = "D";
     String REVERSE = "S";
 
-    String START_EXPLORATION = "R";
+    String START_EXPLORATION = "ex";
     String STOP_EXPLORATION  = "se";
     String START_FASTEST = "pf";
     String STOP_FASTEST  = "sf";

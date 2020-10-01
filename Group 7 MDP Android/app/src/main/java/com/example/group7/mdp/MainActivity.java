@@ -320,7 +320,7 @@ public class MainActivity extends AppCompatActivity
                     */
 
                     //Send the text to bluetooth
-                    BluetoothService.getInstance().sendText("R,"+(arenaview.getArena().getWayPoint().getYPos()+1)+","+Math.abs(21-arenaview.getArena().getWayPoint().getXPos()-1), MainActivity.this);
+                    BluetoothService.getInstance().sendText(Protocol.START_EXPLORATION, MainActivity.this);
 
                     //Send waypoint
                     //String wpString="yy,"+(arenaview.getArena().getWayPoint().getYPos()+1)+","+Math.abs(21-arenaview.getArena().getWayPoint().getXPos()-1);
@@ -389,7 +389,7 @@ public class MainActivity extends AppCompatActivity
                     btnExplore.setEnabled(true);
 
                     fastestTV.setText("Stop Fastest Path");
-                    BluetoothService.getInstance().sendText("N", MainActivity.this);
+                    BluetoothService.getInstance().sendText(Protocol.START_FASTEST+","+arenaview.getArena().getWayPoint().getYPos()+","+String.valueOf(19-arenaview.getArena().getWayPoint().getXPos()), MainActivity.this);
                     // Start FastestPath Timer
                     fastestPathStartTime = SystemClock.uptimeMillis();
                     if(fastestPathTimeHandler == null) {
@@ -1002,11 +1002,11 @@ public class MainActivity extends AppCompatActivity
                 else if(readMessage.startsWith("grid")) {
                     try{
                         Log.d(TAG, "handleMessage: actual sent message:"+readMessage);
-                        BluetoothService.getInstance().sendText(readMessage, this);
+                        //BluetoothService.getInstance().sendText(readMessage, this);
 
                         String mdfStrings[]=readMessage.split(",");
                         arenaview.getArena().getRobot().setPosition(Math.abs(21-Integer.valueOf(mdfStrings[4]))-2,Integer.valueOf(mdfStrings[3]));
-                        BluetoothService.getInstance().sendText(String.valueOf(arenaview.getArena().getRobot().getXPos())+String.valueOf(arenaview.getArena().getRobot().getYPos()), this);
+                        //BluetoothService.getInstance().sendText(String.valueOf(arenaview.getArena().getRobot().getXPos())+String.valueOf(arenaview.getArena().getRobot().getYPos()), this);
 
 
                         switch((Integer.parseInt(mdfStrings[5].trim()))) {
@@ -1033,13 +1033,14 @@ public class MainActivity extends AppCompatActivity
                     btService.write(transmission);
                     //btService.sendText(wpString,getApplicationContext());
                 }
-                else if(readMessage.startsWith("stopExplore")){
+                else if(readMessage.startsWith(Protocol.STOP_EXPLORATION)){
                     btnExplore.performClick();
 
-                    String wpString="yy,"+(arenaview.getArena().getWayPoint().getYPos())+","+Math.abs(21-arenaview.getArena().getWayPoint().getXPos()-2);
-                    byte[] transmission= wpString.getBytes();
-                    btService.write(transmission);
+                    //String wpString="yy,"+(arenaview.getArena().getWayPoint().getYPos())+","+Math.abs(21-arenaview.getArena().getWayPoint().getXPos()-2);
+                    //byte[] transmission= wpString.getBytes();
+                   // btService.write(transmission);
                 }
+
 
                     //Code for dealing with the fastest path
                 else if(readMessage.startsWith("coord")){
@@ -1102,7 +1103,7 @@ public class MainActivity extends AppCompatActivity
 
 
 
-                else if(readMessage.startsWith("stopPath")){
+                else if(readMessage.startsWith(Protocol.STOP_FASTEST)){
                     btnFastestPath.performClick();
                 }
                 else if(readMessage.startsWith("ID")) {
