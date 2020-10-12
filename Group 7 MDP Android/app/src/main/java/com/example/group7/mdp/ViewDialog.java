@@ -82,7 +82,7 @@ public class ViewDialog {
 
 
                 mainActivity.getArenaview().getArena().getRobot().setPosition(r_y, r_x);
-                if ((mainActivity.mod((old_waypoint_y - 14), 14) == w_x) && (mainActivity.mod((19 - old_waypoint_x), 19) == 19 - w_y)) {
+             /*   if ((mainActivity.mod((old_waypoint_y - 14), 14) == w_x) && (mainActivity.mod((19 - old_waypoint_x), 19) == 19 - w_y)) {
                     BluetoothService.getInstance().sendText("No change in Waypoint coordinates", mainActivity);
                     dialog.dismiss();
                 }
@@ -94,7 +94,7 @@ public class ViewDialog {
 
                 //Close dialog
                 dialog.dismiss();
-                }
+                }*/
             }
         });
 

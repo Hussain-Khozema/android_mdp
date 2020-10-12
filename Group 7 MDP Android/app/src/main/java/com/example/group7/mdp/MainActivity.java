@@ -496,23 +496,24 @@ public class MainActivity extends AppCompatActivity
                 enableInputPosition(false, 0);
 
                 // setting robot position done
-                if(setRobotPosition) {
-                    if(oldX != arenaview.getArena().getRobot().getXPos() ||
+                if (setRobotPosition) {
+                    if (oldX != arenaview.getArena().getRobot().getXPos() ||
                             oldY != arenaview.getArena().getRobot().getYPos()) {
-                        /*String newX = String.valueOf(mod((arenaview.getArena().getRobot().getYPos()-15), 15));
-                        String newY = String.valueOf(mod((19-arenaview.getArena().getRobot().getXPos()), 20));
+                        String newX = String.valueOf(mod((arenaview.getArena().getRobot().getYPos() - 15), 15));
+                        String newY = String.valueOf(mod((19 - arenaview.getArena().getRobot().getXPos()), 20));
                         BluetoothService.getInstance().sendText("Robot position changed from X: " +
-                                String.valueOf(mod((oldY-15), 15)) + ", Y: " + String.valueOf(mod((19-oldX), 20)) + " to X: " +
-                                newX + ", Y: " + newY + "\n", this);*/
+                                String.valueOf(mod((oldY - 15), 15)) + ", Y: " + String.valueOf(mod((19 - oldX), 20)) + " to X: " +
+                                newX + ", Y: " + newY + "\n", this);
                         BluetoothService.getInstance().sendText("coordinate (" +
                                 String.valueOf(arenaview.getArena().getRobot().getYPos()) + "," +
-                                String.valueOf(19-arenaview.getArena().getRobot().getXPos()) + ")", this);
+                                String.valueOf(19 - arenaview.getArena().getRobot().getXPos()) + ")", this);
                     } else {
                         Operation.showToast(this, "No change to the position of the Robot.");
                     }
                 }
+
                 // setting waypoint position done
-                else {
+               /* else {
                     if(oldX != arenaview.getArena().getWayPoint().getXPos() ||
                             oldY != arenaview.getArena().getWayPoint().getYPos()) {
                         String newX = String.valueOf(mod((arenaview.getArena().getWayPoint().getYPos()-15), 15));
@@ -524,6 +525,8 @@ public class MainActivity extends AppCompatActivity
                         Operation.showToast(this, "No change to the position of the Robot.");
                     }
                 }
+
+                */
                 break;
 
             case R.id.menu_rotate:
@@ -1027,33 +1030,59 @@ public class MainActivity extends AppCompatActivity
 
                         Robot.Direction direction = arenaview.getArena().getRobot().getDirection();
 
-                        if(direction.equals("NORTH") && (Integer.parseInt(mdfStrings[5].trim())) == 1){
+
+
+                        if((direction==Robot.Direction.NORTH) && (Integer.parseInt(mdfStrings[5].trim())) == 1){
                             ctrlFragment.setStatus(Protocol.STATUS_TURN_RIGHT);
+                            activateIdleCountDownTimer();
                         }
-                        else if(direction.equals("NORTH") && (Integer.parseInt(mdfStrings[5].trim())) == 3){
+                        else if((direction==Robot.Direction.NORTH) && (Integer.parseInt(mdfStrings[5].trim())) == 3){
+
                             ctrlFragment.setStatus(Protocol.STATUS_TURN_LEFT);
+                            activateIdleCountDownTimer();
                         }
-                        else if(direction.equals("EAST") && (Integer.parseInt(mdfStrings[5].trim())) == 2){
+                        else if((direction==Robot.Direction.EAST) && (Integer.parseInt(mdfStrings[5].trim())) == 2){
                             ctrlFragment.setStatus(Protocol.STATUS_TURN_RIGHT);
+                            activateIdleCountDownTimer();
                         }
-                        else if(direction.equals("EAST") && (Integer.parseInt(mdfStrings[5].trim())) == 0){
+                        else if((direction==Robot.Direction.EAST) && (Integer.parseInt(mdfStrings[5].trim())) == 0){
                             ctrlFragment.setStatus(Protocol.STATUS_TURN_LEFT);
+                            activateIdleCountDownTimer();
                         }
-                        else if(direction.equals("SOUTH") && (Integer.parseInt(mdfStrings[5].trim())) == 3){
+                        else if((direction==Robot.Direction.SOUTH) && (Integer.parseInt(mdfStrings[5].trim())) == 3){
                             ctrlFragment.setStatus(Protocol.STATUS_TURN_RIGHT);
+                            activateIdleCountDownTimer();
                         }
-                        else if(direction.equals("SOUTH") && (Integer.parseInt(mdfStrings[5].trim())) == 1){
+                        else if((direction==Robot.Direction.SOUTH) && (Integer.parseInt(mdfStrings[5].trim())) == 1){
                             ctrlFragment.setStatus(Protocol.STATUS_TURN_LEFT);
+                            activateIdleCountDownTimer();
                         }
-                        else if(direction.equals("WEST") && (Integer.parseInt(mdfStrings[5].trim())) == 0){
+                        else if((direction==Robot.Direction.WEST) && (Integer.parseInt(mdfStrings[5].trim())) == 0){
                             ctrlFragment.setStatus(Protocol.STATUS_TURN_RIGHT);
+                            activateIdleCountDownTimer();
                         }
-                        else if(direction.equals("WEST") && (Integer.parseInt(mdfStrings[5].trim())) == 2){
+                        else if((direction==Robot.Direction.WEST) && (Integer.parseInt(mdfStrings[5].trim())) == 2){
                             ctrlFragment.setStatus(Protocol.STATUS_TURN_LEFT);
+                            activateIdleCountDownTimer();
                         }
-                        else{
+
+                        else if((direction==Robot.Direction.NORTH) && (Integer.parseInt(mdfStrings[5].trim())) == 0){
                             ctrlFragment.setStatus(Protocol.STATUS_FORWARD);
+                            activateIdleCountDownTimer();
                         }
+                        else if((direction==Robot.Direction.EAST) && (Integer.parseInt(mdfStrings[5].trim())) == 1){
+                            ctrlFragment.setStatus(Protocol.STATUS_FORWARD);
+                            activateIdleCountDownTimer();
+                        }
+                        else if((direction==Robot.Direction.SOUTH) && (Integer.parseInt(mdfStrings[5].trim())) == 2){
+                            ctrlFragment.setStatus(Protocol.STATUS_FORWARD);
+                            activateIdleCountDownTimer();
+                        }
+                        else if((direction==Robot.Direction.WEST) && (Integer.parseInt(mdfStrings[5].trim())) == 3){
+                            ctrlFragment.setStatus(Protocol.STATUS_FORWARD);
+                            activateIdleCountDownTimer();
+                        }
+
 
 
                         switch((Integer.parseInt(mdfStrings[5].trim()))) {
@@ -1108,28 +1137,28 @@ public class MainActivity extends AppCompatActivity
                                 case("1"):
                                     fwdSteps=1;
                                     break;
-                                case("@"):
+                                case("2"):
                                     fwdSteps=2;
                                     break;
-                                case("#"):
+                                case("3"):
                                     fwdSteps=3;
                                     break;
-                                case("$"):
+                                case("4"):
                                     fwdSteps=4;
                                     break;
-                                case("%"):
+                                case("5"):
                                     fwdSteps=5;
                                     break;
-                                case("^"):
+                                case("6"):
                                     fwdSteps=6;
                                     break;
-                                case("&"):
+                                case("7"):
                                     fwdSteps=7;
                                     break;
-                                case("*"):
+                                case("8"):
                                     fwdSteps=8;
                                     break;
-                                case("("):
+                                case("9"):
                                     fwdSteps=9;
                                     break;
                                 default:
