@@ -464,13 +464,13 @@ public class MainActivity extends AppCompatActivity
     // Set inputWayPointPosition
     public void inputWayPointPosition(int type) {
         if (arenaview != null && arenaview.getArena() != null) {
-
-            if(arenaview.getArena().isReset()) {
-                enableInputPosition(true, type);
-            }
-            else {
-                Operation.showToast(this, "Please reset your arena first");
-            }
+            enableInputPosition(true, type);
+//            if(arenaview.getArena().isReset()) {
+//                enableInputPosition(true, type);
+//            }
+//            else {
+//                Operation.showToast(this, "Please reset your arena first");
+//            }
         }
     }
 
