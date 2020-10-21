@@ -62,6 +62,7 @@ import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Vector;
+import java.util.ArrayList; // import the ArrayList class
 
 import static android.hardware.SensorManager.SENSOR_DELAY_UI;
 
@@ -84,6 +85,8 @@ public class MainActivity extends AppCompatActivity
     private String mConnectedDeviceMac = null;
     Handler handlerAutoUpdate = new Handler();
     private DebugFragment debugFragment = null;
+
+
     private ControlFragment ctrlFragment = null;
     private boolean setRobotPosition; // Used to determine if I am setting Robot or Waypoint position
     private int oldX, oldY;
@@ -103,7 +106,10 @@ public class MainActivity extends AppCompatActivity
 
     private long delayTime;
 
-    private int[]IDString = new int[3];
+    private int[]IDString = new int[4];
+
+    private ArrayList<int[]> imageIDarray = new ArrayList<int[]>();
+    private String mdfObString = "";
 
     Vector fastestPath= new Vector();
 
@@ -347,6 +353,8 @@ public class MainActivity extends AppCompatActivity
                     btnFastestPath.setEnabled(true);
                     exploreTV.setText("Start Explore");
 
+                    UpdateImageOnGrid(); // FINAL IMAGE UPDATE, REMOVE IT IF FAULTY
+
                     // Pause Explore Timer
                     exploreTimeBuff += exploreMillisecondTime;
 
@@ -431,12 +439,117 @@ public class MainActivity extends AppCompatActivity
         activateIdleCountDownTimer();
     }
 
+    public void UpdateImageOnGrid() // BELLO
+    {
+        clearAllBlocks();
+        int maxLocation = 3; // CHANGE HERE TO MOVE MAXIMUM DISTANCE TO ADD IMAGE
+        try {
+            if (!imageIDarray.isEmpty()) {
 
 
+                int num = (Integer.parseInt(mdfObString, 16));
+                String gridBinary = Integer.toBinaryString(num); //CONVERT HEX TO DECIMAL
 
 
+                String[] mdfArray = gridBinary.split("");
 
+                for (int i = 0; i < imageIDarray.size(); i++) {
+                    int[] imageId = imageIDarray.get(i);
+                    int x = 0, y = 0;
+                    int location = imageId[1] + (15 * imageId[2]); //GET OBSTACLE OF THE CURRENT STRING
+                    int count = 0;
+                    boolean change = false;
+                    while (count < maxLocation) //means no obstacle
+                    {
+                        if (mdfArray[location]=="1")
+                        {
+                            if (count != 0) // IF COUNT IS NOT 0, IMPLIES FIRST COOD GIVEN IS CORRECT AND DON'T NEED TO CHANGE.
+                            {
+                                x = location % 15;
+                                y = location / 15;
+                                change = true;
+                            }
+                            break;
+                        }
+                        // NORTH = 0, EAST = 1, SOUTH = 2, WEST = 3
+                        if (imageId[3]==0) //MEANS ROBOT FACING TOP
+                        {
+                            int y_loc = location / 15;
+                            if (y_loc >= 19) // MEANS AT MOST TOP ALREADY
+                            {
+                                break;
+                            }
+                            location = location + 15; // ADD 15 TO ADD Y
+                        }
+                        else if (imageId[3]==1){ // MEANS ROBOT FACING RIGHT
+                            int x_loc = location % 15; // GET CURRENT X POSITION
+                            if (x_loc >= 14) //MEANS AT THE EDGE ALREADY, CANNOT ADD
+                            {
+                                break;
+                            }
+                            location = location + 1; // ADD 1 TO X
+                        }
+                        else if (imageId[3]==2) // MEANS ROBOT FACING DOWNWARDS
+                        {
+                            int y_loc = location / 15;
+                            if (y_loc == 0) // MEANS AT MOST BOTTOM ALREADY
+                            {
+                                break;
+                            }
+                            location = location - 15; // MINUS 15 TO ADD Y
+                        }
+                        else if (imageId[3]==3) // MEANS ROBOT FACING LEFT
+                        {
+                            int x_loc = location % 15; // GET CURRENT X POSITION
+                            if (x_loc == 0) //MEANS AT THE EDGE ALREADY, CANNOT ADD
+                            {
+                                break;
+                            }
+                            location = location - 1;
+                        }
+                        count++;
+                    }
 
+                    if (change==true)
+                    {
+                        drawBlock(imageId[0], x , y);
+                    }
+                }
+            }
+        }
+        catch(Exception ex)
+        {
+
+        }
+
+    }
+
+    public void clearAllBlocks()
+    {
+        for (int i = 0; i < 15; i++) {
+            // BluetoothService.getInstance().sendText(Integer.toString(i) + " | " + Integer.toString(arenaview.getArena().getArrIDBlock(i).getXPos()) + "| " + IDCommand[2] + "|\n", this);
+            arenaview.getArena().getArrIDBlock(i).setPosition(18, 1);
+            arenaview.getArena().getArrIDBlock(i).resetRender();
+        }
+    }
+
+    public void drawBlock(int imageID, int x, int y)
+    {
+        arenaview.getArena().getArrIDBlock(imageID).setPosition(x + 1, y + 1);
+
+        int trans_x = Math.abs(x - 20);
+        int trans_y = y + 1;
+        for (int i = 0; i < 15; i++) {
+            if (i != imageID && (arenaview.getArena().getArrIDBlock(i).getXPos() == trans_x) && (arenaview.getArena().getArrIDBlock(i).getYPos() == trans_y)) {
+                // BluetoothService.getInstance().sendText(Integer.toString(i) + " | " + Integer.toString(arenaview.getArena().getArrIDBlock(i).getXPos()) + "| " + IDCommand[2] + "|\n", this);
+                arenaview.getArena().getArrIDBlock(i).setPosition(18, 1);
+                arenaview.getArena().getArrIDBlock(i).resetRender();
+            }
+        }
+
+        arenaview.getArena().getArrIDBlock(imageID).setRender();
+        arenaview.invalidate();
+    }
 
     // Shortcut to set the Robot or Waypoint follow by it's X and Y position
     public void setRobotPosition (boolean s) {
@@ -1025,6 +1138,7 @@ public class MainActivity extends AppCompatActivity
                         //BluetoothService.getInstance().sendText(readMessage, this);
 
                         String mdfStrings[]=readMessage.split(",");
+                        mdfObString = mdfStrings[2];
                         arenaview.getArena().getRobot().setPosition(Math.abs(21-Integer.valueOf(mdfStrings[4]))-2,Integer.valueOf(mdfStrings[3]));
                         //BluetoothService.getInstance().sendText(String.valueOf(arenaview.getArena().getRobot().getXPos())+String.valueOf(arenaview.getArena().getRobot().getYPos()), this);
 
@@ -1112,6 +1226,7 @@ public class MainActivity extends AppCompatActivity
                 else if(readMessage.startsWith(Protocol.STOP_EXPLORATION)){
                     btnExplore.performClick();
 
+
                     //String wpString="yy,"+(arenaview.getArena().getWayPoint().getYPos())+","+Math.abs(21-arenaview.getArena().getWayPoint().getXPos()-2);
                     //byte[] transmission= wpString.getBytes();
                    // btService.write(transmission);
@@ -1183,22 +1298,9 @@ public class MainActivity extends AppCompatActivity
                     btnFastestPath.performClick();
                 }
                 else if(readMessage.startsWith("ID")) {
+
                     readMessage = readMessage.replace(" ", ",");
                     String IDCommand[] = readMessage.split(",");
-
-
-                    /*try {
-                        int IDpicture = Integer.parseInt(IDCommand[0].split(" ")[1]);
-                        int IDxcoord = Integer.parseInt(IDCommand[1]);
-                        int IDycoord = Integer.parseInt(IDCommand[2]);
-                    }
-                    catch(Exception e)
-                    {
-                        BluetoothService.getInstance().sendText("Incorrect string", this);
-                    }*/
-
-
-
 
                     //Log.d(TAG, "run: current Message: " + IDCommand[0]);
                     if (IDCommand[0].compareTo("ID") == 0 || IDCommand[0].compareTo("id") == 0) {
@@ -1211,9 +1313,11 @@ public class MainActivity extends AppCompatActivity
 
                         //Set the ID and coordinates in the array
                         try{
-                            for(int i=0;i<3;i++){
+                            for(int i=0;i<4;i++){
                                 IDString[i]= Integer.parseInt(IDCommand[i+1]);
                             }
+
+                            imageIDarray.add(IDString);
                             //ctrlFragment.setIDString(IDString);
 
                             if(1<=Integer.parseInt(IDCommand[1])&&Integer.parseInt(IDCommand[2])<=15){
