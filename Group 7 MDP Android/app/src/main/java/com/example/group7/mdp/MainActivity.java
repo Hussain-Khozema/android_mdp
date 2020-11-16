@@ -353,7 +353,7 @@ public class MainActivity extends AppCompatActivity
                     btnFastestPath.setEnabled(true);
                     exploreTV.setText("Start Explore");
 
-                    UpdateImageOnGrid(); // FINAL IMAGE UPDATE, REMOVE IT IF FAULTY
+                    UpdateImageOnGrid1(); // FINAL IMAGE UPDATE, REMOVE IT IF FAULTY
 
                     // Pause Explore Timer
                     exploreTimeBuff += exploreMillisecondTime;
@@ -438,7 +438,73 @@ public class MainActivity extends AppCompatActivity
 
         activateIdleCountDownTimer();
     }
+    public void UpdateImageOnGrid1() // BELLO1
+    {
+        Arena.GridCell gridmap[][] = arenaview.getArena().getGridMap();
+        try {
+            if (!imageIDarray.isEmpty()) {
+                for (int i = 0; i < imageIDarray.size(); i++) {
+                    int maxLocation = 3; // CHANGE HERE TO MOVE MAXIMUM DISTANCE TO ADD IMAGE
+                    int[] imageId = imageIDarray.get(i);
+                    int id = imageId[0];
+                    int x = imageId[1];
+                    int y = imageId[2];
+                    int direction = imageId[3];
+                    int xpos = Math.abs(21-y)-2;
+                    int ypos = x;
+                    //BluetoothService.getInstance().sendText(String.valueOf(id)+String.valueOf(x)+String.valueOf(y)+"a"+"\n", MainActivity.this);
+                    if (gridmap[xpos][ypos].equals(Arena.GridCell.FREE_SPACE)){
+                        //BluetoothService.getInstance().sendText(String.valueOf(id)+String.valueOf(x)+String.valueOf(y)+"b"+"\n", MainActivity.this);
+                        while (maxLocation !=0 && gridmap[xpos][ypos].equals(Arena.GridCell.FREE_SPACE)){
+                            if (direction == 0){
+                                x = x-1;
+                            }
+                            else if (direction == 1){
+                                y = y+1;
+                            }
+                            else if (direction == 2){
+                                x = x+1;
+                            }
+                            else if (direction == 3){
+                                y = y-1;
+                            }
+                            xpos = Math.abs(21-y)-2;
+                            ypos = x;
+                            maxLocation = maxLocation -1 ;
+                        }
+                        if (maxLocation != 0){
+                            //BluetoothService.getInstance().sendText("here", MainActivity.this);
+                            //BluetoothService.getInstance().sendText(String.valueOf(id)+String.valueOf(x)+String.valueOf(y)+"c"+"\n", MainActivity.this);
+                            arenaview.getArena().getArrIDBlock(id - 1).setPosition(x + 1, y + 1);
+                            int trans_x = Math.abs(y - 20);
+                            int trans_y = x + 1;
+                            for (int j = 0; j < 15; j++) {
+                                if (j != id - 1 && (arenaview.getArena().getArrIDBlock(i).getXPos() == trans_x) && (arenaview.getArena().getArrIDBlock(i).getYPos() == trans_y)) {
+                                    arenaview.getArena().getArrIDBlock(i).setPosition(18, 1);
+                                    arenaview.getArena().getArrIDBlock(i).resetRender();
+                                }
+                            }
+                            arenaview.getArena().getArrIDBlock(id - 1).setRender();
+                            arenaview.invalidate();
+                        } //update image
 
+                    }
+                }
+                ctrlFragment.resetIDString();
+                for (int i = 0; i < 15; i++) {
+                    if (arenaview.getArena().getArrIDBlock(i).getRender()) {
+                        String output = (i + 1) + "," + (arenaview.getArena().getArrIDBlock(i).getYPos() - 1) + "," + (20 - arenaview.getArena().getArrIDBlock(i).getXPos());
+                        ctrlFragment.setTvStatus(output);
+                    }
+
+                }
+            }
+        }
+        catch(Exception ex)
+        {
+
+        }
+    }
     public void UpdateImageOnGrid() // BELLO
     {
         clearAllBlocks();
@@ -1313,6 +1379,7 @@ public class MainActivity extends AppCompatActivity
 
                         //Set the ID and coordinates in the array
                         try{
+                            int[]IDString = new int[4];
                             for(int i=0;i<4;i++){
                                 IDString[i]= Integer.parseInt(IDCommand[i+1]);
                             }

@@ -13,14 +13,14 @@ import static com.example.group7.mdp.Arena.Robot.Direction.NORTH;
 public class  Arena {
     //2D cell
 
-    private GridCell[][] gridMap;
+    public GridCell[][] gridMap;
     private Robot robot;
     private WayPoint waypoint;
     private IDBlock arrIDBlock[]= new IDBlock[15];
     //char array
     private char[] mdf1, mdf2;
 
-    protected enum GridCell {
+    public enum GridCell {
         UNEXPLORED, FREE_SPACE, OBSTACLE
     }
 
